@@ -60,16 +60,7 @@ class Cryptor {
         if (this.key != null) {
             return this.key;
         }
-        try {
-            SecureRandom sr = null;
-            sr = SecureRandom.getInstanceStrong();
-            byte[] salt = new byte[16];
-            Objects.requireNonNull(sr).nextBytes(salt);
-            this.key = new SecretKeySpec(pwd.getBytes(), "AES");
-        } catch (NoSuchAlgorithmException e) {
-            System.out.println(NO_ALGORITHM_MSG);
-            e.printStackTrace();
-        }
+        this.key = new SecretKeySpec(pwd.getBytes(), "AES");
         return key;
     }
 }
