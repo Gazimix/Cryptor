@@ -55,7 +55,7 @@ public class Decryptor<T extends Serializable> extends Cryptor {
         File file = new File(pathToFile);
         try (FileInputStream fis = new FileInputStream(file);
                 CipherInputStream cis = new CipherInputStream(fis, cipher)) {
-            int fileSize = (int) Files.size(pth);
+            long fileSize = (long) Files.size(pth);
             long fileSizeWithPadding = fileSize + BUFFER_PAD;
 
             if (fileSizeWithPadding >= Integer.MAX_VALUE) {
