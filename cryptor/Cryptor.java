@@ -1,8 +1,4 @@
-package com.ovhv.certificatesidwallet.Encryption;
-
-import android.os.Build;
-
-import androidx.annotation.RequiresApi;
+package cryptor;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -31,7 +27,6 @@ class Cryptor {
     protected static final String CRYPTO_ALGO = "AES/CBC/NoPadding";
 
     // Methods:
-    @RequiresApi(api = Build.VERSION_CODES.O)
     protected static SecretKey getKey() {
         if (key != null) {
             return key;

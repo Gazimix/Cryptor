@@ -1,8 +1,4 @@
-package com.ovhv.certificatesidwallet.Encryption;
-
-import android.os.Build;
-
-import androidx.annotation.RequiresApi;
+package cryptor;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -20,7 +16,6 @@ import javax.crypto.NoSuchPaddingException;
 public class Encryptor<T extends Serializable> extends Cryptor {
     Cipher cipher;
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public Encryptor() {
         super();
         try {
@@ -38,7 +33,6 @@ public class Encryptor<T extends Serializable> extends Cryptor {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public void encrypt(T dataToEncrypt, String pathToFile) {
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
              ObjectOutputStream oos = new ObjectOutputStream(bos);) {

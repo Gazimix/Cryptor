@@ -1,8 +1,4 @@
-package com.ovhv.certificatesidwallet.Encryption;
-
-import android.os.Build;
-
-import androidx.annotation.RequiresApi;
+package cryptor;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -23,7 +19,6 @@ import javax.crypto.NoSuchPaddingException;
 public class Decryptor<T extends Serializable> extends Cryptor {
     Cipher cipher;
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public Decryptor() {
         super();
         try {
@@ -41,7 +36,6 @@ public class Decryptor<T extends Serializable> extends Cryptor {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public T decrypt(String pathToFile) {
         byte[] bytesData = null;
         T retObj = null;
