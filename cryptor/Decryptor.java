@@ -9,31 +9,21 @@ import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
+
 
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
-import javax.crypto.NoSuchPaddingException;
 
 public class Decryptor<T extends Serializable> extends Cryptor {
-    Cipher cipher;
 
     public Decryptor() {
         super();
-        try {
-            cipher = Cipher.getInstance(Cryptor.CRYPTO_ALGO);
-            cipher.init(Cipher.DECRYPT_MODE, Cryptor.getKey());
-        } catch (NoSuchAlgorithmException e) {
-            System.err.println(Cryptor.NO_ALGORITHM_MSG);
-            e.printStackTrace();
-        } catch (NoSuchPaddingException e) {
-            System.err.println(Cryptor.NO_PADDING_MSG);
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            System.err.println(Cryptor.INVALID_KEY_MSG);
-            e.printStackTrace();
-        }
+        initCipher(Cipher.DECRYPT_MODE);
+    }
+
+    public Decryptor(String pwd) {
+        super(pwd);
+        initCipher(Cipher.DECRYPT_MODE);
     }
 
     public T decrypt(String pathToFile) {
@@ -44,6 +34,7 @@ public class Decryptor<T extends Serializable> extends Cryptor {
         File file = new File(pathToFile);
         try (FileInputStream fis = new FileInputStream(file);
              CipherInputStream cis = new CipherInputStream(fis, cipher)) {
+            int fileSize = (int) Files.size(pth);
             long fileSizeWithPadding = Files.size(pth) + 4096;
 
             if (fileSizeWithPadding >= Integer.MAX_VALUE){
@@ -51,16 +42,13 @@ public class Decryptor<T extends Serializable> extends Cryptor {
                 return null;
             }
             bytesData = new byte[(int) fileSizeWithPadding]; // allocate bytes array
-
-            if ((bytesRead = cis.read(bytesData)) == -1) {
-                System.err.println(Cryptor.INPUT_FILE_READ_PROBLEM);
-                return null;
-            } else {
-                System.err.println("Cryptor: read " + bytesRead + " bytes from encrypted file");
+            int cur = 0;
+            while ((bytesRead = cis.read(bytesData, cur, 48)) != -1){
+                cur += bytesRead;
+            }
                 try (ByteArrayInputStream bis = new ByteArrayInputStream(bytesData);
                      ObjectInputStream in = new ObjectInputStream(bis)) {
                     retObj = (T) in.readObject();
-                }
             }
         } catch (IOException e) {
             System.err.println(Cryptor.BAD_IO_MSG);
