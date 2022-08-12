@@ -40,14 +40,14 @@ public class Main {
     private static void runListTest() {
         try {
             ArrayList<Integer> arrList = new ArrayList<>();
-            for (int i = 0; i < 10; ++i) {
+            for (int i = 0; i < 1000; ++i) {
                 arrList.add(i);
             }
             Encryptor<ArrayList<Integer>> e = new Encryptor<>(PWD);
             e.encrypt(arrList, "2.txt");
             Decryptor<ArrayList<Integer>> d = new Decryptor<>(PWD);
             ArrayList<Integer> result = d.decrypt("2.txt");
-            for (int i = 0; i < 10; ++i) {
+            for (int i = 0; i < result.size(); ++i) {
                 System.out.print(result.get(i) + "|");
             }
             System.out.print("\n");
