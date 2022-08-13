@@ -40,7 +40,7 @@ public class Main {
     private static void runListTest() {
         try {
             ArrayList<Integer> arrList = new ArrayList<>();
-            for (int i = 0; i < 5000; ++i) {
+            for (int i = 0; i < 20; ++i) {
                 arrList.add(i);
             }
             Encryptor<ArrayList<Integer>> e = new Encryptor<>(PWD);

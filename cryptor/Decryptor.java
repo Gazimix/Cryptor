@@ -45,16 +45,16 @@ public class Decryptor<T extends Serializable> extends Cryptor {
      * earlier.
      * 
      * @param pathToFile path to file in which to save encrypted object
+     * @return the object after deserialization if successful, else null
      */
     public T decrypt(String pathToFile) {
         byte[] bytesData = null;
-        T retObj = null;
         int bytesRead = 0;
         Path pth = Paths.get(pathToFile);
         File file = new File(pathToFile);
         try (FileInputStream fis = new FileInputStream(file);
                 CipherInputStream cis = new CipherInputStream(fis, getCipher())) {
-            long fileSize = (long) Files.size(pth);
+            long fileSize = Files.size(pth);
             long fileSizeWithPadding = fileSize + BUFFER_PAD;
 
             if (fileSizeWithPadding >= Integer.MAX_VALUE) {
@@ -68,7 +68,9 @@ public class Decryptor<T extends Serializable> extends Cryptor {
             }
             try (ByteArrayInputStream bis = new ByteArrayInputStream(bytesData);
                     ObjectInputStream in = new ObjectInputStream(bis)) {
-                retObj = (T) in.readObject();
+                @SuppressWarnings("unchecked")
+                T retObj = (T) in.readObject();
+                return retObj;
             }
         } catch (IOException e) {
             System.err.println(Cryptor.BAD_IO_MSG);
@@ -77,6 +79,6 @@ public class Decryptor<T extends Serializable> extends Cryptor {
             System.err.println(Cryptor.NO_SUCH_CLASS);
             e.printStackTrace();
         }
-        return retObj;
+        return null;
     }
 }
