@@ -21,7 +21,7 @@ import javax.crypto.CipherInputStream;
 public class Decryptor<T extends Serializable> extends Cryptor {
 
     static final int BUFFER_PAD = 4096;
-    static final int READ_SIZE = 1000;
+    static final int READ_SIZE = 4000;
 
     /**
      * Class constructor
@@ -34,8 +34,7 @@ public class Decryptor<T extends Serializable> extends Cryptor {
      * @throws BadPasswordException
      */
     public Decryptor(String secretKeyWord) throws BadPasswordException {
-        super(secretKeyWord);
-        initCipher(Cipher.DECRYPT_MODE);
+        super(secretKeyWord, Cipher.DECRYPT_MODE);
     }
 
     /**
@@ -54,7 +53,7 @@ public class Decryptor<T extends Serializable> extends Cryptor {
         Path pth = Paths.get(pathToFile);
         File file = new File(pathToFile);
         try (FileInputStream fis = new FileInputStream(file);
-                CipherInputStream cis = new CipherInputStream(fis, cipher)) {
+                CipherInputStream cis = new CipherInputStream(fis, getCipher())) {
             long fileSize = (long) Files.size(pth);
             long fileSizeWithPadding = fileSize + BUFFER_PAD;
 

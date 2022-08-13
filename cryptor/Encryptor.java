@@ -19,8 +19,7 @@ public class Encryptor<T extends Serializable> extends Cryptor {
      * @throws BadPasswordException
      */
     public Encryptor(String secretKeyWord) throws BadPasswordException {
-        super(secretKeyWord);
-        initCipher(Cipher.ENCRYPT_MODE);
+        super(secretKeyWord, Cipher.ENCRYPT_MODE);
     }
 
     /**
@@ -39,7 +38,7 @@ public class Encryptor<T extends Serializable> extends Cryptor {
 
             File file = new File(pathToFile);
             try (FileOutputStream fos = new FileOutputStream(file);
-                    CipherOutputStream cos = new CipherOutputStream(fos, cipher)) {
+                    CipherOutputStream cos = new CipherOutputStream(fos, getCipher())) {
                 cos.write(byteData);
             }
         } catch (IOException e) {

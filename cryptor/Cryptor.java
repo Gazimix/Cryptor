@@ -18,7 +18,7 @@ abstract class Cryptor {
     // The password should be either 16 or 32 characters long
     private String pwd;
     private SecretKey key = null;
-    protected Cipher cipher;
+    private Cipher cipher;
 
     // Protected constants, should be accessible to inheriting classes:
     protected static final String BAD_IO_MSG = "Error: couldn't open given file";
@@ -37,7 +37,7 @@ abstract class Cryptor {
      * 
      * @param cipherMode usually either Cipher.ENCRYPT_MODE or Cipher.DECRYPT_MODE
      */
-    protected void initCipher(int cipherMode) {
+    private void initCipher(int cipherMode) {
         try {
             cipher = Cipher.getInstance(Cryptor.CRYPTO_ALGO);
             cipher.init(cipherMode, getKey());
@@ -53,6 +53,10 @@ abstract class Cryptor {
         }
     }
 
+    protected Cipher getCipher(){
+        return this.cipher;
+    }
+
     /**
      * Constructor for the Cryptor abstract class
      * 
@@ -61,9 +65,10 @@ abstract class Cryptor {
      * @throws BadPasswordException a bad password exception if the password is not
      *                              up to par
      */
-    public Cryptor(String paramPwd) throws BadPasswordException {
+    protected Cryptor(String paramPwd, int cipherMode) throws BadPasswordException {
         if (paramPwd.length() == 16 || paramPwd.length() == 32) {
             this.pwd = paramPwd;
+            this.initCipher(cipherMode);
         } else {
             throw new BadPasswordException();
         }
